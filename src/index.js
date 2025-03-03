@@ -1,44 +1,57 @@
-const Button = document.getElementById('upload-btn')
-const fileInput = document.getElementById('file-input')
-const preview = document.getElementById('preview')
+const uploadButton = document.getElementById('upload-btn');
+const convertButton = document.getElementById('convert-btn');
+const fileInput = document.getElementById('file-input');
+const preview = document.getElementById('preview');
 
-Button.addEventListener("click",function(){
-/*upload documents to a local storage*/
-	const file = fileInput.file[0];
-	if(!file){
-         alert("Please select an IMAGE first");
-		return;
-	}
-	
-	const reader = new FileReader();
-	reader.readAsDataUrl(file);
+let uploadedImage = null; // Store the uploaded image
 
-	reader.onload = function (event) {
-                  const img = new Image();
-		  img.src = event.target.result;
+uploadButton.addEventListener("click", function () {
+    const file = fileInput.files[0];
+    if (!file) {
+        alert("Please select an image first.");
+        return;
+    }
 
-		img.onload = function () {
-                //this function creates canvas
-			const canvas = document.getElementById('canvas');
-			const ctx = canvas.getContext();
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
 
-			canvas.width = img.width;
-			canvas.height = img.height;
-                
-                // Draw image onto canvas
-                ctx.drawImage(img, 0, 0, img.width, img.height);
+    reader.onload = function (event) {
+        uploadedImage = event.target.result; // Store image data
+        preview.src = uploadedImage;
+        preview.style.display = "block";
+        convertButton.classList.remove("hidden"); // Show Convert button
+    };
+});
 
-                // Convert to desired format (change 'image/webp' to 'image/png' or 'image/jpeg')
-                const convertedImg = canvas.toDataURL("image/webp", 1.0);
+convertButton.addEventListener("click", function () {
+    if (!uploadedImage) {
+        alert("Please upload an image first.");
+        return;
+    }
 
-                // Store in local storage
-                localStorage.setItem("convertedImage", convertedImg);
+    const img = new Image();
+    img.src = uploadedImage;
 
-                // Display the converted image
-                preview.src = convertedImg;
-                preview.style.display = "block";
+    img.onload = function () {
+        // Create a canvas
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext("2d");
 
-                alert("Image converted and saved to local storage!");
-		};
-	};
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        // Draw the image onto the canvas
+        ctx.drawImage(img, 0, 0, img.width, img.height);
+
+        // Detect current format and convert accordingly
+        let newFormat = uploadedImage.includes("image/png") ? "image/jpeg" : "image/png";
+        let convertedImage = canvas.toDataURL(newFormat, 1.0);
+
+        // Store in local storage
+        localStorage.setItem("convertedImage", convertedImage);
+
+        // Update preview
+        preview.src = convertedImage;
+        alert(`Image converted to ${newFormat.split("/")[1]} and saved to local storage!`);
+    };
 });

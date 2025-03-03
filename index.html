@@ -3,23 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JPG/PNG converter tool</title>
-     <script src="https://cdn.tailwindcss.com"></script>
+    <title>JPG/PNG Converter Tool</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class = "bg-black">
+<body class="bg-black">
 
-	<div class= "flex bg-red justify-center items-center h-screen ">
+    <div class="flex flex-col items-center justify-center h-screen space-y-4">
+        <h1 class="text-2xl text-white">Upload Your Image:</h1>
+        
+        <input type="file" id="file-input" accept="image/png, image/jpeg" class="bg-gray-800 text-white p-2 rounded">
+        
+        <div class="space-x-2">
+            <button id="upload-btn" class="bg-red-500 text-white px-4 py-2 rounded">Upload</button>
+            <button id="convert-btn" class="bg-blue-500 text-white px-4 py-2 rounded hidden">Convert</button>
+        </div>
 
-          <div> <h1 class ="text-2xl text-white"> Upload your files: </h1>
-		  <input type="file" id="file-input" accept="image/*">
-                 <button id="upload-btn text-white bg-red"> UPLOAD </button>
-		 <img id="preview" alt="Converted Image" style="max-width: 100%; display: none;">
-	  </div>
+        <img id="preview" alt="Converted Image" style="max-width: 100%; display: none;" class="mt-4 rounded shadow-md">
+    </div>
 
-	</div>
-
-
-
-	<script src="/src/index.js"> </script>
+    <script src="/src/index.js"></script>
 </body>
 </html>
